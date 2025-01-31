@@ -194,7 +194,7 @@ const MoviePage = () => {
 
       <Modal
         visible={shareModalVisible}
-        animationType='slide'
+        animationType='fade'
         transparent
       >
         <RateAndShare modalVisible={setShareModalVisible} movie={movie} />

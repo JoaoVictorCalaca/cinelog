@@ -65,17 +65,22 @@ const RateAndShare: React.FC<RateAndShareProps> = ({ modalVisible, movie }) => {
 
   return (
     <Pressable onPress={handlePress} style={styles.container}>
+      <TouchableOpacity style={styles.backButton} onPress={closeModal}>
+        <Ionicons name='close' color={colors.black} size={iconSize}/>
+      </TouchableOpacity>
 
       <ViewShot
         ref={viewRef}
         options={{ format: "png", quality: 1 }}
         style={styles.box}
       >
-        <Image source={{ uri: `https://image.tmdb.org/t/p/original${movie.poster_path}` }} style={{
-          width: 220,
-          height: 330,
-          borderRadius: 12
-        }} />
+        <Image source={{ uri: `https://image.tmdb.org/t/p/original${movie.poster_path}` }}
+          style={{
+            width: 220,
+            height: 330,
+            borderRadius: 12
+          }}
+        />
 
         <View>
           <Text
@@ -105,13 +110,27 @@ const RateAndShare: React.FC<RateAndShareProps> = ({ modalVisible, movie }) => {
           ))}
         </View>
 
-        <Text
-          style={[
-            defalutStyles.colorWhite,
-            defalutStyles.paragraph,
-            styles.title,
-          ]}
-        >Shared with Cinelog 🔥</Text>
+        <View style={{
+          flexDirection: 'row',
+          gap: 6,
+          alignItems: 'center',
+        }}>
+          <Text
+            style={[
+              defalutStyles.colorWhite,
+              defalutStyles.paragraph,
+              styles.title,
+            ]}
+          >Compartilhado por</Text>
+          <Image
+            source={require('../../assets/images/cinelog-logo.png')}
+            style={{
+              width: 70,
+              aspectRatio: 3/1,
+              borderRadius: 12
+            }}
+          />
+        </View>
       </ViewShot>
 
       <TouchableOpacity
@@ -138,6 +157,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     zIndex: 0,
     gap: 50
+  },
+
+  backButton: {
+    backgroundColor: colors.white,
+    width: 30,
+    aspectRatio: 1 / 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+    alignSelf: 'flex-end',
+    marginRight: 20
   },
 
   box: {
