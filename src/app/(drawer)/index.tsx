@@ -1,10 +1,10 @@
 import { View, Text, FlatList, StyleSheet } from 'react-native'
 import React from 'react'
-import { defalutStyles } from '../util/defaultStyles'
+import { defalutStyles } from '../../util/defaultStyles'
 import { StatusBar } from 'expo-status-bar'
-import { Movie } from '../util/interfaces/MovieInterface'
+import { Movie } from '../../util/interfaces/MovieInterface'
 import MovieCard from '@/src/components/MovieCard'
-import { getPopularMovies } from '../util/movieDbApi'
+import { getPopularMovies } from '../../util/movieDbApi'
 
 const index = () => {
   const [movies, setMovies] = React.useState<Movie | null>(null);

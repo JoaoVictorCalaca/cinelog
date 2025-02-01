@@ -1,8 +1,8 @@
 import { Drawer } from 'expo-router/drawer';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { colors } from '../util/colors';
+import { colors } from '../../util/colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { iconSize } from '../util/defaultStyles';
+import { iconSize } from '../../util/defaultStyles';
 import React from 'react';
 import { Image } from 'react-native';
 
@@ -68,6 +68,14 @@ export default function Layout() {
             drawerLabel: 'Pesquisar',
             title: 'Pesquisar',
             drawerIcon: ({ color, focused }) => <Ionicons size={24} name={focused ? 'search' : 'search-outline'} color={color} />
+          }}
+        />
+        <Drawer.Screen
+          name="profile"
+          options={{
+            drawerLabel: 'Perfil',
+            title: 'Perfil',
+            drawerIcon: ({ color, focused }) => <Ionicons size={24} name={focused ? 'person-circle' : 'person-circle-outline'} color={color} />
           }}
         />
       </Drawer>

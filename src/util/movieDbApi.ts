@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const api_key = 'insert_key_here'
+const api_key = 'your api key'
 const baseURL = 'https://api.themoviedb.org/3'
 
 export const getMovies = async (movieTitle: string) => {
@@ -57,5 +57,36 @@ export const getMovieTrailer = async (movieId: string) => {
   } catch (e) {
     console.error(`erro ao conseguir o trailer: ${e}`);
 
+  }
+}
+
+export const getPopularMovies = async () => {
+  try {
+    const resp = await axios.get(`${baseURL}/movie/popular`, {
+      params: {
+        api_key: api_key,
+        language: 'pt-BR'
+      }
+    })
+
+    return resp.data.results || []
+  } catch (e) {
+    console.log(`Error in the fetch: ${e}`);
+    return []
+  }
+}
+
+export const getWatchProviders = async (movieId: string) => {
+  try {
+    const resp = await axios.get(`${baseURL}/movie/${movieId}/watch/providers`, {
+      params: {
+        api_key: api_key,
+      }
+    })
+
+    return resp.data.results?.BR || null
+  } catch (e) {
+    console.error(`Error in the fetch: ${e}`);
+    return[]
   }
 }

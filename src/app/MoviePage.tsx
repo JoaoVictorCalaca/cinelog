@@ -21,26 +21,23 @@ import { StatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import RateStars from '@/src/components/RateStars';
-import { colors } from './util/colors';
+import { colors } from '.././util/colors';
 import {
   defalutStyles,
   iconSize
-} from './util/defaultStyles';
-import { Movie } from './util/interfaces/MovieInterface';
-import { getMovieById, getMovieTrailer } from './util/movieDbApi';
-import ViewShot, { captureRef } from 'react-native-view-shot'
-import * as Sharing from 'expo-sharing'
-import * as FileSystem from 'expo-file-system'
+} from '.././util/defaultStyles';
+import { Movie } from '.././util/interfaces/MovieInterface';
+import { getMovieById, getMovieTrailer, getWatchProviders } from '.././util/movieDbApi';
 import RateAndShare from '../components/RateAndShare';
+import MovieProviders from '../components/MovieProviders';
 
 const MoviePage = () => {
   const params = useLocalSearchParams();
   const { id } = params
   const [movie, setMovie] = React.useState<Movie | null>()
-  const viewRef = React.useRef<ViewShot>(null);
-  const [imageUri, setImageUri] = React.useState<string | null>(null)
   const [trailerUrl, setTrailerUrl] = React.useState<string | null>(null)
   const [shareModalVisible, setShareModalVisible] = React.useState<boolean>(false)
+  const [providers, setProviders] = React.useState<WatchProvidersResponse | null>(null)
 
   React.useEffect(() => {
     const handleMovieFetch = async () => {
@@ -56,8 +53,16 @@ const MoviePage = () => {
       }
     };
 
+    const fetchProviders = async () => {
+      const resp = await getWatchProviders(id.toString())
+      if (resp) {
+        setProviders(resp)
+      }
+    }
+
     handleMovieFetch()
     fetchTrailer()
+    fetchProviders()
   }, [])
 
   const watchTrailer = () => {
@@ -69,31 +74,6 @@ const MoviePage = () => {
 
   const closePage = () => {
     router.back()
-  }
-
-  const shareReview = async () => {
-    if (viewRef.current) {
-      try {
-        const uri = await captureRef(viewRef, {
-          format: "jpg",
-          quality: 1,
-        });
-        setImageUri(uri);
-
-        const newPath = `${FileSystem.documentDirectory}captured.png`;
-        await FileSystem.moveAsync({
-          from: uri,
-          to: newPath,
-        });
-
-        if (await Sharing.isAvailableAsync()) {
-          await Sharing.shareAsync(newPath)
-        }
-
-      } catch (error) {
-        console.error("Erro ao capturar screenshot: ", error);
-      }
-    }
   }
 
   const startSharing = () => {
@@ -143,9 +123,7 @@ const MoviePage = () => {
           </TouchableOpacity>
         )}
 
-        <ViewShot
-          ref={viewRef}
-          options={{ format: "jpg", quality: 0.9 }}
+        <View
           style={{
             flexDirection: 'row',
           }}>
@@ -162,7 +140,7 @@ const MoviePage = () => {
               color: colors.gold
             }
           ]}>/5</Text>
-        </ViewShot>
+        </View>
 
         <View style={styles.box}>
           <Text
@@ -188,8 +166,10 @@ const MoviePage = () => {
               defalutStyles.paragraph
             ]}
           >Avaliar</Text>
-          <Ionicons name='star-half-outline' color={colors.white} size={iconSize}/>
+          <Ionicons name='star-half-outline' color={colors.white} size={iconSize} />
         </TouchableOpacity>
+
+        <MovieProviders providers={providers}/>
       </ScrollView>
 
       <Modal

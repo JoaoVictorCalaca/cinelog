@@ -11,11 +11,11 @@ import {
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { StatusBar } from 'expo-status-bar'
 import Constants from 'expo-constants'
-import { getMovies } from "../util/movieDbApi";
+import { getMovies } from "../../util/movieDbApi";
 import MovieCard from "@/src/components/MovieCard";
-import { colors } from "../util/colors";
-import { defalutStyles, iconSize } from "../util/defaultStyles";
-import { Movie } from "../util/interfaces/MovieInterface";
+import { colors } from "../../util/colors";
+import { defalutStyles, iconSize } from "../../util/defaultStyles";
+import { Movie } from "../../util/interfaces/MovieInterface";
 
 export default function Search() {
   const [query, setQuery] = React.useState<string>('')
@@ -76,7 +76,7 @@ export default function Search() {
 
 const styles = StyleSheet.create({
   header: {
-    paddingTop: Platform.OS === 'android' ? Constants.statusBarHeight + 8 : 80,
+    paddingTop: 20,
     gap: 4
   },
 

@@ -1,13 +1,13 @@
 import { View, Text, StyleSheet, Button, Pressable, Image, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import React from 'react'
-import { defalutStyles, iconSize } from '../app/util/defaultStyles'
-import { Movie } from '../app/util/interfaces/MovieInterface'
-import { colors } from '../app/util/colors'
 import ViewShot, { captureRef } from 'react-native-view-shot'
 import * as Sharing from 'expo-sharing'
 import * as FileSystem from 'expo-file-system'
 import Ionicons from '@expo/vector-icons/Ionicons'
+import { colors } from '../util/colors'
+import { iconSize, defalutStyles } from '../util/defaultStyles'
+import { Movie } from '../util/interfaces/MovieInterface'
 
 interface RateAndShareProps {
   modalVisible: (visible: boolean) => void,
@@ -104,7 +104,7 @@ const RateAndShare: React.FC<RateAndShareProps> = ({ modalVisible, movie }) => {
           gap: 4
         }}>
           {[1, 2, 3, 4, 5].map((index) => (
-            <TouchableOpacity onPress={() => handleRate(index)}>
+            <TouchableOpacity key={index} onPress={() => handleRate(index)}>
               <Ionicons name={index <= rating ? 'star' : 'star-outline'} color={colors.gold} size={iconSize + 6} />
             </TouchableOpacity>
           ))}

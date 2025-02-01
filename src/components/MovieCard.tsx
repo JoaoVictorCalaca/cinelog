@@ -2,9 +2,9 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator } fr
 import React from 'react'
 import RateStars from './RateStars'
 import { Link, router } from 'expo-router'
-import { colors } from '../app/util/colors'
-import { defalutStyles } from '../app/util/defaultStyles'
-import { Movie } from '../app/util/interfaces/MovieInterface'
+import { colors } from '../util/colors'
+import { defalutStyles } from '../util/defaultStyles'
+import { Movie } from '../util/interfaces/MovieInterface'
 
 interface MovieCardProps {
   movie: Movie | null
