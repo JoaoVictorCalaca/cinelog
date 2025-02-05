@@ -27,8 +27,41 @@ export default function Search() {
   }
 
   const renderItem = ({ item }: { item: Movie }) => (
-    <MovieCard key={item.id} movie={item} />
+    <MovieCard showText={true} key={item.id} movie={item} />
   )
+
+  if (movies === null) {
+    return (
+      <View style={[
+        defalutStyles.container,
+        defalutStyles.centerContent,
+        {
+          paddingHorizontal: 20,
+          gap: 40
+        }
+      ]}>
+        <View style={styles.header}>
+          <View style={styles.searchInput}>
+            <TextInput
+              placeholder="Ex: Ainda Estou Aqui"
+              placeholderTextColor={colors.gray}
+              style={{ color: colors.white, width: '90%' }}
+              cursorColor={colors.blue}
+              selectionColor={colors.blue}
+              keyboardType="web-search"
+              returnKeyType="search"
+              inputMode="search"
+              value={query}
+              onChangeText={setQuery}
+              onSubmitEditing={() => handleSearch(query)}
+            />
+
+            <Ionicons name='search' color={colors.blue} size={iconSize} />
+          </View>
+        </View>
+      </View>
+    )
+  }
 
   return (
     <View style={[

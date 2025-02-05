@@ -9,7 +9,8 @@ import {
   ScrollView,
   Button,
   Linking,
-  Modal
+  Modal,
+  FlatList
 } from 'react-native'
 import React from 'react'
 import {
@@ -27,9 +28,10 @@ import {
   iconSize
 } from '.././util/defaultStyles';
 import { Movie } from '.././util/interfaces/MovieInterface';
-import { getMovieById, getMovieTrailer, getWatchProviders } from '.././util/movieDbApi';
+import { getMovieById, getMovieTrailer, getSimilarMovies, getWatchProviders } from '.././util/movieDbApi';
 import RateAndShare from '../components/RateAndShare';
 import MovieProviders from '../components/MovieProviders';
+import MovieCard from '../components/MovieCard';
 
 const MoviePage = () => {
   const params = useLocalSearchParams();
@@ -38,6 +40,7 @@ const MoviePage = () => {
   const [trailerUrl, setTrailerUrl] = React.useState<string | null>(null)
   const [shareModalVisible, setShareModalVisible] = React.useState<boolean>(false)
   const [providers, setProviders] = React.useState<WatchProvidersResponse | null>(null)
+  const [similarMovies, setSimilarMovies] = React.useState<Movie | null>(null)
 
   React.useEffect(() => {
     const handleMovieFetch = async () => {
@@ -60,6 +63,14 @@ const MoviePage = () => {
       }
     }
 
+    const fetchSimilarMovies = async () => {
+      const resp = await getSimilarMovies(id.toString())
+
+      setSimilarMovies(resp)
+    }
+
+
+    fetchSimilarMovies()
     handleMovieFetch()
     fetchTrailer()
     fetchProviders()
@@ -79,6 +90,10 @@ const MoviePage = () => {
   const startSharing = () => {
     setShareModalVisible(true)
   }
+
+  const renderItem = ({ item }: { item: Movie }) => (
+    <MovieCard key={item.id.toString()} showText={false} movie={item} />
+  )
 
   if (!movie) {
     return (
@@ -118,7 +133,7 @@ const MoviePage = () => {
 
         {trailerUrl && (
           <TouchableOpacity onPress={watchTrailer} style={[{ flexDirection: 'row', gap: 6 }, defalutStyles.centerContent]}>
-            <Text style={[defalutStyles.colorWhite, defalutStyles.paragraph]}>Assistir ao railer</Text>
+            <Text style={[defalutStyles.colorWhite, defalutStyles.paragraph]}>Assistir ao trailer</Text>
             <Ionicons name='logo-youtube' color={colors.white} size={iconSize} />
           </TouchableOpacity>
         )}
@@ -169,7 +184,21 @@ const MoviePage = () => {
           <Ionicons name='star-half-outline' color={colors.white} size={iconSize} />
         </TouchableOpacity>
 
-        <MovieProviders providers={providers}/>
+        <MovieProviders providers={providers} />
+
+        <View style={{ marginTop: 20, gap: 10 }}>
+          <Text style={[defalutStyles.colorWhite, defalutStyles.paragraph]}>Quem assistiu {movie.title} também gostou de:</Text>
+
+          <FlatList
+            renderItem={renderItem}
+            data={Array.isArray(similarMovies) ? similarMovies : similarMovies ? [similarMovies] : []}
+            keyExtractor={item => item.id.toString()}
+            horizontal
+            contentContainerStyle={{
+              gap: 10,
+            }}
+          />
+        </View>
       </ScrollView>
 
       <Modal

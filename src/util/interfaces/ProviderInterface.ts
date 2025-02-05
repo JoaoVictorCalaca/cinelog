@@ -5,6 +5,7 @@ interface ProviderCategory {
 }
 
 interface Provider {
+  map(arg0: (provider: any) => React.JSX.Element | null): any;
   link?: string;
   flatrate?: ProviderCategory[]
   buy?: ProviderCategory[]

@@ -1,58 +1,57 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native'
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import React from 'react'
 import { defalutStyles } from '../../util/defaultStyles'
-import { StatusBar } from 'expo-status-bar'
-import { Movie } from '../../util/interfaces/MovieInterface'
-import MovieCard from '@/src/components/MovieCard'
-import { getPopularMovies } from '../../util/movieDbApi'
+import PopularMovies from '@/src/components/PopularMovies'
+import { colors } from '@/src/util/colors'
+import NowPlayingMovies from '@/src/components/NowPlayingMovies'
+import BestRatedMovies from '@/src/components/BestRatedMovies'
+import UpcomingMovies from '@/src/components/UpcomingMovies'
 
 const index = () => {
-  const [movies, setMovies] = React.useState<Movie | null>(null);
+  const [activeFilter, setActiveFilter] = React.useState<number>(0)
+  const options = ['Em exibição', 'Populares da semana', 'Melhor avaliados', 'Em breve']
 
-  React.useEffect(()=> {
-    const fetchPopularMovies = async () => {
-      const resp = await getPopularMovies()
-      setMovies(resp)
-    }
+  const handleFilterOption = (index: number) => {
+    setActiveFilter(index)
+  }
 
-    fetchPopularMovies()
-  }, [])
-
-  const renderItem = ({ item }: { item: Movie }) => (
-    <MovieCard key={item.id.toString()} movie={item} />
-  )
+  const componentsArray = [
+    <NowPlayingMovies />,
+    <PopularMovies />,
+    <BestRatedMovies />,
+    <UpcomingMovies />,
+  ];
 
   return (
-    <View style={[
-      defalutStyles.container,
-      {
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 10
-      }
-    ]}>
-      <FlatList
-        renderItem={renderItem}
-        data={Array.isArray(movies) ? movies : movies ? [movies] : []}
-        keyExtractor={item => item.id.toString()}
-        contentContainerStyle={{
-          gap: 10,
-          paddingBottom: 90
-        }}
-        style={styles.flatlist}
-      />
+    <View style={[defalutStyles.container]}>
+      <View style={{ height: 50 }}>
+        <ScrollView
+          horizontal
+          style={{ flexDirection: 'row' }}
+          contentContainerStyle={{ gap: 8, padding: 5 }}
+          showsHorizontalScrollIndicator={false}
+        >
+          {options.map((option, index) => (
+            <TouchableOpacity key={index} onPress={()=> handleFilterOption(index)} style={[styles.optionBtn, { backgroundColor: activeFilter === index ? colors.blue : colors.darkGray }]}>
+              <Text style={[defalutStyles.colorWhite, defalutStyles.paragraph]}>{option}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
 
-      <StatusBar translucent />
+      {componentsArray[activeFilter]}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  flatlist: {
-    marginTop: 20,
-    width: '100%',
+  optionBtn: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    height: 45,
+    borderRadius: 12
   }
 })
-
 
 export default index

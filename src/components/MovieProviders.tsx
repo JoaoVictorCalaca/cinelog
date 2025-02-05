@@ -6,9 +6,6 @@ interface MovieprovidersProps {
 }
 
 const Movieproviders: React.FC<MovieprovidersProps> = ({ providers }) => {
-  console.log(providers);
-  
-
   if (providers === null) {
     return (
       <Text style={[defalutStyles.colorWhite, defalutStyles.paragraph]}>Ainda não temos informações sobre onde assistir esse filme.</Text>
@@ -35,9 +32,13 @@ const Movieproviders: React.FC<MovieprovidersProps> = ({ providers }) => {
           gap: 10
         }}
       >
-        {["free", "buy", "rent", "flatrate"].map((category) => (
-          providers?.[category as keyof Provider]?.map((provider: any) => {
-            if (!provider.logo_path) return null
+        {["free", "buy", "rent", "flatrate"].map((category) => {
+          const categoryProviders = providers?.[category as keyof Provider];
+
+          if (!categoryProviders) return null;
+
+          return categoryProviders.map((provider: any) => {
+            if (!provider.logo_path) return null;
 
             return (
               <View
@@ -66,9 +67,10 @@ const Movieproviders: React.FC<MovieprovidersProps> = ({ providers }) => {
                 </Text>
               </View>
             );
-          })
-        ))}
+          });
+        })}
       </View>
+      <Text style={[defalutStyles.colorWhite, defalutStyles.paragraph]}>Dados de provedores fornecidos por: JustWatch</Text>
     </View>
   )
 }

@@ -7,10 +7,11 @@ import { defalutStyles } from '../util/defaultStyles'
 import { Movie } from '../util/interfaces/MovieInterface'
 
 interface MovieCardProps {
-  movie: Movie | null
+  movie: Movie | null,
+  showText: boolean
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ movie, showText }) => {
   const [votes, setVotes] = React.useState<number | undefined>(0)
 
   React.useEffect(() => {
@@ -50,24 +51,52 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
       }}
       onPress={navigateToMoviePage}
     >
-      <View style={styles.container}>
+      <View style={[styles.container, { flexDirection: showText ? 'row' : 'column', alignItems: 'center', justifyContent: 'center' }]}>
         <Image source={{ uri: `https://image.tmdb.org/t/p/original${movie.poster_path}` }} style={{
           width: 110,
           height: 165,
           borderRadius: 12
         }} />
 
-        <View style={styles.box}>
-          <View>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode='tail'
-              style={[
-                defalutStyles.h1,
-                defalutStyles.colorWhite,
-                styles.title,
-                { fontWeight: 'bold' }
-              ]}>{movie?.title}</Text>
+        {!showText && (
+          <Text
+            numberOfLines={1}
+            ellipsizeMode='tail'
+            style={[
+              defalutStyles.paragraph,
+              defalutStyles.colorWhite,
+              styles.title,
+              {
+                width: showText ? '100%' : '50%'
+              }
+            ]}>{movie?.title}</Text>
+        )}
+
+        {showText && (
+          <View style={styles.box}>
+            <View>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode='tail'
+                style={[
+                  defalutStyles.h1,
+                  defalutStyles.colorWhite,
+                  styles.title,
+                  { fontWeight: 'bold' }
+                ]}>{movie?.title}</Text>
+
+              <Text
+                numberOfLines={6}
+                ellipsizeMode='tail'
+                style={[
+                  defalutStyles.paragraph,
+                  defalutStyles.colorWhite,
+                  styles.title,
+                  {
+                    fontWeight: 'bold'
+                  }
+                ]}>{formatDate(movie?.release_date)}</Text>
+            </View>
 
             <Text
               numberOfLines={6}
@@ -75,34 +104,14 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
               style={[
                 defalutStyles.paragraph,
                 defalutStyles.colorWhite,
-                styles.title,
-                {
-                  fontWeight: 'bold'
-                }
-              ]}>{formatDate(movie?.release_date)}</Text>
-          </View>
+                styles.title
+              ]}>{movie?.overview}</Text>
 
-          <Text
-            numberOfLines={6}
-            ellipsizeMode='tail'
-            style={[
-              defalutStyles.paragraph,
-              defalutStyles.colorWhite,
-              styles.title
-            ]}>{movie?.overview}</Text>
-
-          <View style={{
-            flexDirection: 'row'
-          }}>
-            <RateStars id={movie.id} rating={votes} />
-            <Text style={[
-              defalutStyles.paragraph,
-              {
-                color: colors.gold
-              }
-            ]}>/5</Text>
+            <View>
+              <RateStars id={movie.id} rating={votes} />
+            </View>
           </View>
-        </View>
+        )}
       </View>
     </Link>
   )
@@ -111,7 +120,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 12,
-    flexDirection: 'row',
     padding: 5,
     width: '100%',
     justifyContent: 'space-around',
