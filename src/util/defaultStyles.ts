@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { colors } from "./colors";
 
-export const defalutStyles = StyleSheet.create({
+export const defaultStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.black
@@ -15,14 +15,18 @@ export const defalutStyles = StyleSheet.create({
     fontSize: 14
   },
 
-  colorWhite: {
-    color: colors.white
+  defaultTextColor: {
+    color: colors.gray
   },
 
   centerContent: {
     justifyContent: 'center',
     alignItems: 'center',
   },
+
+  colorBlack: {
+    color: colors.black
+  }
 })
 
 export const iconSize = 17

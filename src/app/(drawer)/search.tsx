@@ -9,12 +9,11 @@ import {
   View
 } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { StatusBar } from 'expo-status-bar'
 import Constants from 'expo-constants'
 import { getMovies } from "../../util/movieDbApi";
 import MovieCard from "@/src/components/MovieCard";
 import { colors } from "../../util/colors";
-import { defalutStyles, iconSize } from "../../util/defaultStyles";
+import { defaultStyles, iconSize } from "../../util/defaultStyles";
 import { Movie } from "../../util/interfaces/MovieInterface";
 
 export default function Search() {
@@ -33,8 +32,8 @@ export default function Search() {
   if (movies === null) {
     return (
       <View style={[
-        defalutStyles.container,
-        defalutStyles.centerContent,
+        defaultStyles.container,
+        defaultStyles.centerContent,
         {
           paddingHorizontal: 20,
           gap: 40
@@ -56,7 +55,7 @@ export default function Search() {
               onSubmitEditing={() => handleSearch(query)}
             />
 
-            <Ionicons name='search' color={colors.blue} size={iconSize} />
+            <Ionicons name='search' color={colors.gray} size={iconSize} />
           </View>
         </View>
       </View>
@@ -65,7 +64,7 @@ export default function Search() {
 
   return (
     <View style={[
-      defalutStyles.container,
+      defaultStyles.container,
       { paddingHorizontal: 20 }
     ]}>
       <View style={styles.header}>
@@ -84,7 +83,7 @@ export default function Search() {
             onSubmitEditing={() => handleSearch(query)}
           />
 
-          <Ionicons name='search' color={colors.blue} size={iconSize} />
+          <Ionicons name='search' color={colors.gray} size={iconSize} />
         </View>
       </View>
 
@@ -100,9 +99,6 @@ export default function Search() {
           style={styles.flatlist}
         />
       </View>
-
-
-      <StatusBar style="light" translucent />
     </View>
   );
 }
@@ -119,7 +115,7 @@ const styles = StyleSheet.create({
 
   searchInput: {
     borderWidth: 2,
-    borderColor: colors.blue,
+    borderColor: colors.gray,
     paddingHorizontal: 10,
     color: colors.white,
     borderRadius: 12,

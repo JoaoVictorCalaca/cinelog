@@ -59,7 +59,6 @@ export const getMovieTrailer = async (movieId: string) => {
     return `https://www.youtube.com/watch?v=${trailer.key}`
   } catch (e) {
     console.error(`erro ao conseguir o trailer: ${e}`);
-
   }
 }
 
@@ -143,7 +142,7 @@ export const getWatchProviders = async (movieId: string) => {
     return resp.data.results?.BR || null
   } catch (e) {
     console.error(`Error in the fetch: ${e}`);
-    return[]
+    return []
   }
 }
 
@@ -161,4 +160,12 @@ export const getSimilarMovies = async (movieId: string) => {
     console.error(`Error in the fetch ${e}`);
     return []
   }
+}
+
+
+
+//formatar a data de lançamento
+export const formatDate = (dateString: string) => {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('pt-BR')
 }
