@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: Platform.OS === 'android' ? Constants.statusBarHeight + 15 : 45,
     left: 20,
-    zIndex: 10
+    zIndex: 10,
   },
 
   shareButton: {
