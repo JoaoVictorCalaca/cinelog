@@ -209,21 +209,6 @@ const MoviePage = () => {
             </Text>
           </View>
 
-          <TouchableOpacity
-            style={styles.shareButton}
-            onPress={startSharing}>
-            <Text
-              style={[
-                defaultStyles.colorBlack,
-                defaultStyles.paragraph,
-                {
-                  fontWeight: 'bold'
-                }
-              ]}
-            >Avaliar</Text>
-            <Ionicons name='star-half-outline' color={colors.black} size={iconSize} />
-          </TouchableOpacity>
-
           <MovieProviders providers={providers} />
 
           <View style={{ marginTop: 20, gap: 10 }}>
@@ -241,6 +226,21 @@ const MoviePage = () => {
           </View>
         </View>
       </ScrollView>
+
+      <TouchableOpacity
+        style={styles.shareButton}
+        onPress={startSharing}>
+        <Text
+          style={[
+            defaultStyles.paragraph,
+            defaultStyles.colorBlack,
+            {
+              fontWeight: 'bold'
+            }
+          ]}
+        >Avaliar</Text>
+        <Ionicons name='star' color={colors.black} size={iconSize} />
+      </TouchableOpacity>
 
       <Modal
         visible={shareModalVisible}
@@ -287,12 +287,15 @@ const styles = StyleSheet.create({
 
   shareButton: {
     backgroundColor: colors.green,
-    padding: 10,
-    borderRadius: 12,
+    padding: 20,
+    borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 6
+    gap: 6,
+    position: 'absolute',
+    bottom: 20,
+    right: 20
   }
 })
 
