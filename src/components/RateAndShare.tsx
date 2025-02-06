@@ -6,7 +6,7 @@ import * as Sharing from 'expo-sharing'
 import * as FileSystem from 'expo-file-system'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { colors } from '../util/colors'
-import { iconSize, defalutStyles } from '../util/defaultStyles'
+import { iconSize, defaultStyles } from '../util/defaultStyles'
 import { Movie } from '../util/interfaces/MovieInterface'
 
 interface RateAndShareProps {
@@ -58,11 +58,6 @@ const RateAndShare: React.FC<RateAndShareProps> = ({ modalVisible, movie }) => {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('pt-BR')
-  }
-
   return (
     <Pressable onPress={handlePress} style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={closeModal}>
@@ -82,23 +77,6 @@ const RateAndShare: React.FC<RateAndShareProps> = ({ modalVisible, movie }) => {
           }}
         />
 
-        <View>
-          <Text
-            style={[
-              defalutStyles.colorWhite,
-              defalutStyles.paragraph,
-              styles.title
-            ]}
-          >{movie.title}</Text>
-
-          <Text
-            style={[
-              defalutStyles.colorWhite,
-              defalutStyles.paragraph,
-            ]}
-          >{formatDate(movie.release_date)}</Text>
-        </View>
-
         <View style={{
           flexDirection: 'row',
           gap: 4
@@ -117,8 +95,8 @@ const RateAndShare: React.FC<RateAndShareProps> = ({ modalVisible, movie }) => {
         }}>
           <Text
             style={[
-              defalutStyles.colorWhite,
-              defalutStyles.paragraph,
+              defaultStyles.defaultTextColor,
+              defaultStyles.paragraph,
               styles.title,
             ]}
           >Compartilhado por</Text>
@@ -139,11 +117,14 @@ const RateAndShare: React.FC<RateAndShareProps> = ({ modalVisible, movie }) => {
       >
         <Text
           style={[
-            defalutStyles.colorWhite,
-            defalutStyles.paragraph
+            defaultStyles.colorBlack,
+            defaultStyles.paragraph,
+            {
+              fontWeight: 'bold'
+            }
           ]}
         >Compartilhar</Text>
-        <Ionicons name='share-outline' color={colors.white} size={iconSize} />
+        <Ionicons name='share-outline' color={colors.black} size={iconSize} />
       </TouchableOpacity>
     </Pressable>
   )
@@ -154,7 +135,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    backgroundColor: 'rgba(0, 0, 0, 0.88)',
     zIndex: 0,
     gap: 50
   },
@@ -176,8 +157,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     alignItems: 'center',
     justifyContent: 'space-around',
-    borderWidth: 2,
-    borderColor: colors.blue,
     gap: 15,
     backgroundColor: colors.black
   },
@@ -187,7 +166,7 @@ const styles = StyleSheet.create({
   },
 
   shareButton: {
-    backgroundColor: colors.blue,
+    backgroundColor: colors.green,
     padding: 10,
     borderRadius: 12,
     justifyContent: 'center',

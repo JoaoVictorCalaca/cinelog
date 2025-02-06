@@ -18,20 +18,20 @@ import {
   router,
   useLocalSearchParams
 } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import RateStars from '@/src/components/RateStars';
 import { colors } from '.././util/colors';
 import {
-  defalutStyles,
+  defaultStyles,
   iconSize
 } from '.././util/defaultStyles';
 import { Movie } from '.././util/interfaces/MovieInterface';
-import { getMovieById, getMovieTrailer, getSimilarMovies, getWatchProviders } from '.././util/movieDbApi';
+import { formatDate, getMovieById, getMovieTrailer, getSimilarMovies, getWatchProviders } from '.././util/movieDbApi';
 import RateAndShare from '../components/RateAndShare';
 import MovieProviders from '../components/MovieProviders';
 import MovieCard from '../components/MovieCard';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const MoviePage = () => {
   const params = useLocalSearchParams();
@@ -69,7 +69,6 @@ const MoviePage = () => {
       setSimilarMovies(resp)
     }
 
-
     fetchSimilarMovies()
     handleMovieFetch()
     fetchTrailer()
@@ -98,12 +97,10 @@ const MoviePage = () => {
   if (!movie) {
     return (
       <View style={[
-        defalutStyles.container,
-        defalutStyles.centerContent
+        defaultStyles.container,
+        defaultStyles.centerContent
       ]}>
         <ActivityIndicator size='large' color={colors.blue} />
-
-        <StatusBar translucent />
       </View>
     )
   }
@@ -111,7 +108,7 @@ const MoviePage = () => {
   return (
     <View style={[
       styles.container,
-      defalutStyles.container
+      defaultStyles.container
     ]}>
       <TouchableOpacity onPress={closePage} style={styles.backButton}>
         <Ionicons
@@ -120,84 +117,128 @@ const MoviePage = () => {
           size={iconSize}
         />
       </TouchableOpacity>
+      <ScrollView>
 
-      <ScrollView contentContainerStyle={[
-        styles.scrollview,
-      ]}>
-        <Image source={{ uri: `https://image.tmdb.org/t/p/original${movie.poster_path}` }} style={{
-          width: 220,
-          height: 330,
-          borderRadius: 12,
-          alignSelf: 'center'
-        }} />
-
-        {trailerUrl && (
-          <TouchableOpacity onPress={watchTrailer} style={[{ flexDirection: 'row', gap: 6 }, defalutStyles.centerContent]}>
-            <Text style={[defalutStyles.colorWhite, defalutStyles.paragraph]}>Assistir ao trailer</Text>
-            <Ionicons name='logo-youtube' color={colors.white} size={iconSize} />
-          </TouchableOpacity>
-        )}
-
-        <View
-          style={{
-            flexDirection: 'row',
-          }}>
-          <Text
-            style={[
-              defalutStyles.colorWhite,
-              defalutStyles.paragraph
-            ]}
-          >Avaliação média dos usuários: </Text>
-          <RateStars id={movie.id} rating={Math.max(1, Math.round((movie.vote_average ?? 0) / 2))} />
-          <Text style={[
-            defalutStyles.paragraph,
-            {
-              color: colors.gold
-            }
-          ]}>/5</Text>
-        </View>
-
-        <View style={styles.box}>
-          <Text
-            style={[
-              defalutStyles.h1,
-              defalutStyles.colorWhite,
-              { fontWeight: 'bold' }
-            ]}>{movie?.title}</Text>
-
-          <Text
-            style={[
-              defalutStyles.paragraph,
-              defalutStyles.colorWhite,
-            ]}>{movie?.overview}</Text>
-        </View>
-
-        <TouchableOpacity
-          style={styles.shareButton}
-          onPress={startSharing}>
-          <Text
-            style={[
-              defalutStyles.colorWhite,
-              defalutStyles.paragraph
-            ]}
-          >Avaliar</Text>
-          <Ionicons name='star-half-outline' color={colors.white} size={iconSize} />
-        </TouchableOpacity>
-
-        <MovieProviders providers={providers} />
-
-        <View style={{ marginTop: 20, gap: 10 }}>
-          <Text style={[defalutStyles.colorWhite, defalutStyles.paragraph]}>Quem assistiu {movie.title} também gostou de:</Text>
-
-          <FlatList
-            renderItem={renderItem}
-            data={Array.isArray(similarMovies) ? similarMovies : similarMovies ? [similarMovies] : []}
-            keyExtractor={item => item.id.toString()}
-            horizontal
-            contentContainerStyle={{
-              gap: 10,
+        <View style={{ position: 'relative' }}>
+          <Image
+            source={{ uri: `https://image.tmdb.org/t/p/original${movie.backdrop_path}` }}
+            style={{
+              width: '100%',
+              height: 210,
             }}
           />
+
+          <LinearGradient
+            colors={[
+              colors.black, 'rgba(0, 0, 0, 0.38)',
+              colors.black
+            ]}
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              flex: 1,
+              bottom: 0,
+            }}
+          />
+        </View>
+
+        <View style={{ paddingHorizontal: 20, marginTop: -85, gap: 20 }}>
+          <Image source={{ uri: `https://image.tmdb.org/t/p/original${movie.poster_path}` }} style={{
+            width: 220,
+            height: 330,
+            borderRadius: 12,
+            alignSelf: 'center',
+          }} />
+
+          {trailerUrl && (
+            <TouchableOpacity
+              onPress={watchTrailer}
+              style={[{
+                flexDirection: 'row',
+                gap: 6
+              },
+              defaultStyles.centerContent,
+              styles.trailerLink
+              ]}
+            >
+              <Text
+                style={[
+                  defaultStyles.colorBlack,
+                  defaultStyles.paragraph
+                ]}
+              >Assistir trailer</Text>
+              <Ionicons name='logo-youtube' color={colors.black} size={iconSize} />
+            </TouchableOpacity>
+          )}
+
+          <View style={styles.box}>
+            <Text
+              style={[
+                defaultStyles.h1,
+                defaultStyles.defaultTextColor,
+                { fontWeight: 'bold' }
+              ]}>{movie?.title}</Text>
+
+            <Text
+              style={[
+                defaultStyles.paragraph,
+                defaultStyles.defaultTextColor,
+              ]}>{movie?.overview}</Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            <Text
+              style={[
+                defaultStyles.defaultTextColor,
+                defaultStyles.paragraph
+              ]}
+            >Avaliação média dos usuários: </Text>
+            <RateStars id={movie.id} rating={Math.max(1, Math.round((movie.vote_average ?? 0) / 2))} />
+          </View>
+
+          <View>
+            <Text style={[defaultStyles.defaultTextColor, defaultStyles.paragraph, { fontWeight: 'bold' }]}>Lançado em:
+              <Text style={[defaultStyles.defaultTextColor, defaultStyles.paragraph, { fontWeight: 'normal' }]}> {formatDate(movie.release_date)}</Text>
+            </Text>
+            <Text style={[defaultStyles.defaultTextColor, defaultStyles.paragraph, { fontWeight: 'bold' }]}>Tempo de duração:
+              <Text style={[defaultStyles.defaultTextColor, defaultStyles.paragraph, { fontWeight: 'normal' }]}> {movie.runtime}min</Text>
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.shareButton}
+            onPress={startSharing}>
+            <Text
+              style={[
+                defaultStyles.colorBlack,
+                defaultStyles.paragraph,
+                {
+                  fontWeight: 'bold'
+                }
+              ]}
+            >Avaliar</Text>
+            <Ionicons name='star-half-outline' color={colors.black} size={iconSize} />
+          </TouchableOpacity>
+
+          <MovieProviders providers={providers} />
+
+          <View style={{ marginTop: 20, gap: 10 }}>
+            <Text style={[defaultStyles.defaultTextColor, defaultStyles.paragraph]}>Quem assistiu {movie.title} também gostou de:</Text>
+
+            <FlatList
+              renderItem={renderItem}
+              data={Array.isArray(similarMovies) ? similarMovies : similarMovies ? [similarMovies] : []}
+              keyExtractor={item => item.id.toString()}
+              horizontal
+              contentContainerStyle={{
+                gap: 10,
+              }}
+            />
+          </View>
         </View>
       </ScrollView>
 
@@ -208,7 +249,6 @@ const MoviePage = () => {
       >
         <RateAndShare modalVisible={setShareModalVisible} movie={movie} />
       </Modal>
-      <StatusBar translucent />
     </View>
   )
 }
@@ -216,17 +256,20 @@ const MoviePage = () => {
 const styles = StyleSheet.create({
   container: {
     paddingTop: Platform.OS === 'android' ? Constants.statusBarHeight : 80,
-    paddingHorizontal: 20,
     gap: 20
-  },
-
-  scrollview: {
-    gap: 20,
-    paddingBottom: 20
   },
 
   box: {
     width: '100%',
+    gap: 10
+  },
+
+  trailerLink: {
+    backgroundColor: colors.green,
+    padding: 10,
+    width: '55%',
+    borderRadius: 12,
+    alignSelf: 'center'
   },
 
   backButton: {
@@ -235,11 +278,15 @@ const styles = StyleSheet.create({
     aspectRatio: 1 / 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 12
+    borderRadius: 12,
+    position: 'absolute',
+    top: Platform.OS === 'android' ? Constants.statusBarHeight + 15 : 45,
+    left: 20,
+    zIndex: 10
   },
 
   shareButton: {
-    backgroundColor: colors.blue,
+    backgroundColor: colors.green,
     padding: 10,
     borderRadius: 12,
     justifyContent: 'center',

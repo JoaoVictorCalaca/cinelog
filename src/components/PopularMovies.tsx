@@ -1,9 +1,10 @@
-import { View, Text, FlatList, StatusBar, StyleSheet } from 'react-native'
+import { View, Text, FlatList, StatusBar, StyleSheet, ActivityIndicator } from 'react-native'
 import React from 'react'
-import { defalutStyles } from '../util/defaultStyles';
+import { defaultStyles } from '../util/defaultStyles';
 import { Movie } from '../util/interfaces/MovieInterface';
 import { getPopularMovies } from '../util/movieDbApi';
-import MovieCard from './MovieCard';
+import BigMovieCard from './BigMovieCard';
+import { colors } from '../util/colors';
 
 const PopularMovies = () => {
   const [movies, setMovies] = React.useState<Movie | null>(null);
@@ -18,28 +19,45 @@ const PopularMovies = () => {
   }, [])
 
   const renderItem = ({ item }: { item: Movie }) => (
-    <MovieCard showText={true} key={item.id.toString()} movie={item} />
+    <BigMovieCard key={item.id.toString()} movie={item} />
   )
+
+  if (!movies) {
+    return (
+      <View style={[
+        defaultStyles.container,
+        defaultStyles.centerContent
+      ]}>
+        <ActivityIndicator size='large' color={colors.blue} />
+      </View>
+    )
+  }
 
   return (
     <View style={[
-      defalutStyles.container,
+      defaultStyles.container,
       {
         justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 10
+        padding: 10,
+        gap: 15
       }
     ]}>
-      <FlatList
-        renderItem={renderItem}
-        data={Array.isArray(movies) ? movies : movies ? [movies] : []}
-        keyExtractor={item => item.id.toString()}
-        contentContainerStyle={{
-          gap: 10,
-          paddingBottom: 90
-        }}
-        style={styles.flatlist}
-      />
+      <Text style={[defaultStyles.defaultTextColor, defaultStyles.h1]}>Destaques da semana 🔥</Text>
+
+      <View style={{
+
+      }}>
+        <FlatList
+          renderItem={renderItem}
+          data={Array.isArray(movies) ? movies : movies ? [movies] : []}
+          keyExtractor={item => item.id.toString()}
+          contentContainerStyle={{
+            gap: 10,
+          }}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
 
       <StatusBar translucent />
     </View>
@@ -47,10 +65,6 @@ const PopularMovies = () => {
 }
 
 const styles = StyleSheet.create({
-  flatlist: {
-    marginTop: 20,
-    width: '100%',
-  }
 })
 
 export default PopularMovies

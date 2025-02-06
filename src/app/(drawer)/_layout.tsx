@@ -24,7 +24,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
 
       <DrawerItemList {...props} />
 
-      <View style={{ padding: 20 , gap: 20}}>
+      <View style={{ padding: 20, gap: 20 }}>
         <Text style={{ color: colors.gray, fontSize: 14, textAlign: 'center' }}>
           © 2025 CineLog - Todos os direitos reservados.
         </Text>
@@ -48,13 +48,12 @@ export default function Layout() {
           },
           headerStyle: {
             backgroundColor: colors.black,
-            borderColor: colors.blue,
-            borderBottomWidth: 2
+            elevation: 5
           },
           headerTintColor: colors.white,
           drawerInactiveTintColor: colors.white,
-          drawerActiveTintColor: colors.white,
-          drawerActiveBackgroundColor: colors.blue,
+          drawerActiveTintColor: colors.black,
+          drawerActiveBackgroundColor: colors.green,
         }}>
         <Drawer.Screen
           name="index"

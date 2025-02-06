@@ -1,14 +1,40 @@
 import { View, Text, Linking, TouchableOpacity, Image } from 'react-native'
-import { defalutStyles } from '../util/defaultStyles'
+import { defaultStyles } from '../util/defaultStyles'
 
 interface MovieprovidersProps {
   providers: WatchProvidersResponse | null
 }
 
 const Movieproviders: React.FC<MovieprovidersProps> = ({ providers }) => {
+  const handleCategoryTranslante = (englishCategory: string) => {
+    switch (englishCategory) {
+      case 'free':
+        return 'Grátis'
+        break;
+      case 'buy':
+        return 'Compra'
+        break;
+      case 'rent':
+        return 'Aluguel'
+        break;
+      case 'flatrate':
+        return 'Streaming'
+        break;
+      default:
+        break;
+    }
+  }
+  
   if (providers === null) {
     return (
-      <Text style={[defalutStyles.colorWhite, defalutStyles.paragraph]}>Ainda não temos informações sobre onde assistir esse filme.</Text>
+      <Text
+        style={[
+          defaultStyles.defaultTextColor,
+          defaultStyles.paragraph
+        ]}
+      >
+        Ainda não temos informações sobre onde assistir esse filme.
+      </Text>
     )
   }
 
@@ -20,8 +46,8 @@ const Movieproviders: React.FC<MovieprovidersProps> = ({ providers }) => {
     >
       <Text
         style={[
-          defalutStyles.colorWhite,
-          defalutStyles.paragraph,
+          defaultStyles.defaultTextColor,
+          defaultStyles.paragraph,
           {
             fontWeight: 'bold'
           }]}
@@ -59,18 +85,18 @@ const Movieproviders: React.FC<MovieprovidersProps> = ({ providers }) => {
                 />
                 <Text
                   style={[
-                    defalutStyles.colorWhite,
-                    defalutStyles.paragraph
+                    defaultStyles.defaultTextColor,
+                    defaultStyles.paragraph
                   ]}
                 >
-                  • {provider.provider_name}
+                  • {provider.provider_name} | {handleCategoryTranslante(category)}
                 </Text>
               </View>
             );
           });
         })}
       </View>
-      <Text style={[defalutStyles.colorWhite, defalutStyles.paragraph]}>Dados de provedores fornecidos por: JustWatch</Text>
+      <Text style={[defaultStyles.defaultTextColor, defaultStyles.paragraph]}>Dados de provedores fornecidos por: JustWatch</Text>
     </View>
   )
 }
