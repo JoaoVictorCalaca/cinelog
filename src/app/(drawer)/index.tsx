@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView } from 'react-native'
+import { StyleSheet, ScrollView, Button, View } from 'react-native'
 import React from 'react'
 import { defaultStyles } from '../../util/defaultStyles'
 import PopularMovies from '@/src/components/PopularMovies'
@@ -9,14 +9,10 @@ import { StatusBar } from 'expo-status-bar'
 
 const index = () => {
   return (
-    <ScrollView style={[defaultStyles.container]} contentContainerStyle={{ gap: 20 }}>
+    <View style={[defaultStyles.container, { gap: 20 }]}>
       <PopularMovies />
-      <NowPlayingMovies />
-      <UpcomingMovies />
-      <BestRatedMovies />
-
-      <StatusBar translucent style='light'/>
-    </ScrollView>
+      <StatusBar translucent style='light' />
+    </View>
   )
 }
 

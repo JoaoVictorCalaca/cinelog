@@ -63,16 +63,17 @@ export const getMovieTrailer = async (movieId: string) => {
 }
 
 // retorna uma lista dos filmes mais populares da semana
-export const getPopularMovies = async () => {
+export const getPopularMovies = async (page: number) => {
   try {
     const resp = await axios.get(`${baseURL}/trending/movie/week`, {
       params: {
         api_key: api_key,
-        language: 'pt-BR'
+        language: 'pt-BR',
+        page
       }
     })
 
-    return resp.data.results || []
+    return resp.data ?? { results: [], total_pages: 1 };    
   } catch (e) {
     console.log(`Error in the fetch: ${e}`);
     return []
@@ -160,12 +161,4 @@ export const getSimilarMovies = async (movieId: string) => {
     console.error(`Error in the fetch ${e}`);
     return []
   }
-}
-
-
-
-//formatar a data de lançamento
-export const formatDate = (dateString: string) => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('pt-BR')
 }

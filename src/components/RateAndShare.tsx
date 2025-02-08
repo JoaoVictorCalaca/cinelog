@@ -15,7 +15,7 @@ interface RateAndShareProps {
 }
 
 const RateAndShare: React.FC<RateAndShareProps> = ({ modalVisible, movie }) => {
-  const viewRef = React.useRef<ViewShot>(null);
+  const viewRef = React.useRef<View>(null);
   const [imageUri, setImageUri] = React.useState<string | null>(null)
   const [rating, setRating] = React.useState<number>(0)
 
@@ -37,8 +37,10 @@ const RateAndShare: React.FC<RateAndShareProps> = ({ modalVisible, movie }) => {
     if (viewRef.current) {
       try {
         const uri = await captureRef(viewRef, {
-          format: "jpg",
+          format: "png",
           quality: 1,
+          result: 'tmpfile',
+          fileName: 'share'
         });
         setImageUri(uri);
 
@@ -61,13 +63,12 @@ const RateAndShare: React.FC<RateAndShareProps> = ({ modalVisible, movie }) => {
   return (
     <Pressable onPress={handlePress} style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={closeModal}>
-        <Ionicons name='close' color={colors.black} size={iconSize}/>
+        <Ionicons name='close' color={colors.black} size={iconSize} />
       </TouchableOpacity>
-
-      <ViewShot
+      <View
         ref={viewRef}
-        options={{ format: "png", quality: 1 }}
         style={styles.box}
+        collapsable={false}
       >
         <Image source={{ uri: `https://image.tmdb.org/t/p/original${movie.poster_path}` }}
           style={{
@@ -104,12 +105,12 @@ const RateAndShare: React.FC<RateAndShareProps> = ({ modalVisible, movie }) => {
             source={require('../../assets/images/cinelog-logo.png')}
             style={{
               width: 70,
-              aspectRatio: 3/1,
+              aspectRatio: 3 / 1,
               borderRadius: 12
             }}
           />
         </View>
-      </ViewShot>
+      </View>
 
       <TouchableOpacity
         onPress={shareReview}
@@ -154,11 +155,11 @@ const styles = StyleSheet.create({
   box: {
     width: '77%',
     padding: 15,
-    borderRadius: 4,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'space-around',
     gap: 15,
-    backgroundColor: colors.black
+    backgroundColor: 'transparent'
   },
 
   title: {

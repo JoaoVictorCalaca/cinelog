@@ -1,25 +1,39 @@
-import { View, Text, FlatList, StatusBar, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList, StatusBar, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { defaultStyles } from '../util/defaultStyles';
 import { Movie } from '../util/interfaces/MovieInterface';
 import { getPopularMovies } from '../util/movieDbApi';
 import BigMovieCard from './BigMovieCard';
 import { colors } from '../util/colors';
+import MovieCard from './MovieCard';
+import ListMoreButton from './ListMoreButton';
 
 const PopularMovies = () => {
-  const [movies, setMovies] = React.useState<Movie | null>(null);
+  const [movies, setMovies] = React.useState<Movie[] | null>(null);
+  const [page, setPage] = React.useState<number>(1)
 
   React.useEffect(() => {
-    const fetchPopularMovies = async () => {
-      const resp = await getPopularMovies()
-      setMovies(resp)
-    }
-
-    fetchPopularMovies()
+    fetchMovies(1)
   }, [])
 
+  const fetchMovies = async (pageNumber: number) => {
+    try {
+      const data = await getPopularMovies(pageNumber)
+
+      if (!data || !Array.isArray(data.results)) {
+        throw new Error('Resposta inválida da API');
+      }
+
+      setMovies(prevMovies => [...prevMovies ?? [], ...data.results])
+      setPage(pageNumber)
+    } catch (e) {
+      console.error(`Error in fetch: ${e}`);
+
+    }
+  }
+
   const renderItem = ({ item }: { item: Movie }) => (
-    <BigMovieCard key={item.id.toString()} movie={item} />
+    <MovieCard showText={false} key={item.id.toString()} movie={item} />
   )
 
   if (!movies) {
@@ -42,23 +56,30 @@ const PopularMovies = () => {
         gap: 15
       }
     ]}>
-      <Text style={[defaultStyles.defaultTextColor, defaultStyles.h1]}>Destaques da semana 🔥</Text>
-
-      <View style={{
-
-      }}>
-        <FlatList
-          renderItem={renderItem}
-          data={Array.isArray(movies) ? movies : movies ? [movies] : []}
-          keyExtractor={item => item.id.toString()}
-          contentContainerStyle={{
-            gap: 10,
-          }}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
-
+      <FlatList
+        renderItem={renderItem}
+        data={Array.isArray(movies) ? movies : movies ? [movies] : []}
+        keyExtractor={item => item.id.toString()}
+        numColumns={3}
+        ListHeaderComponent={(
+          <Text
+            key={'#'}
+            style={[
+              defaultStyles.defaultTextColor,
+              defaultStyles.h1,
+              {
+                marginBottom: 10
+              }
+            ]}>Populares da semana</Text>
+        )}
+        ListFooterComponent={(
+          <ListMoreButton
+            page={page}
+            fetchMovies={fetchMovies}
+            key={'@'}
+         />
+        )}
+      />
       <StatusBar translucent />
     </View>
   )

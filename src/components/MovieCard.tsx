@@ -5,7 +5,7 @@ import { Link, router } from 'expo-router'
 import { colors } from '../util/colors'
 import { defaultStyles } from '../util/defaultStyles'
 import { Movie } from '../util/interfaces/MovieInterface'
-import { formatDate } from '../util/movieDbApi'
+import { formatDate } from '../util/functions'
 
 interface MovieCardProps {
   movie: Movie | null,
@@ -45,7 +45,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, showText }) => {
         <Image source={{ uri: `https://image.tmdb.org/t/p/original${movie.poster_path}` }} style={{
           width: 110,
           height: 165,
-          borderRadius: 12
+          borderRadius: 12,
         }} />
 
         {showText && (
@@ -96,10 +96,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, showText }) => {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 12,
-    padding: 5,
-    width: '100%',
+    padding: 1,
     justifyContent: 'space-around',
-    gap: 20
+    gap: 20,
   },
 
   box: {

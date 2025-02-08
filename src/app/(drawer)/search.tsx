@@ -67,36 +67,37 @@ export default function Search() {
       defaultStyles.container,
       { paddingHorizontal: 20 }
     ]}>
-      <View style={styles.header}>
-        <View style={styles.searchInput}>
-          <TextInput
-            placeholder="Ex: Ainda Estou Aqui"
-            placeholderTextColor={colors.gray}
-            style={{ color: colors.white, width: '90%' }}
-            cursorColor={colors.blue}
-            selectionColor={colors.blue}
-            keyboardType="web-search"
-            returnKeyType="search"
-            inputMode="search"
-            value={query}
-            onChangeText={setQuery}
-            onSubmitEditing={() => handleSearch(query)}
-          />
-
-          <Ionicons name='search' color={colors.gray} size={iconSize} />
-        </View>
-      </View>
-
-      <View style={styles.box}>
+      <View>
         <FlatList
           renderItem={renderItem}
           data={Array.isArray(movies) ? movies : movies ? [movies] : []}
           keyExtractor={item => item.id.toString()}
           contentContainerStyle={{
             gap: 10,
-            paddingBottom: 90
+            paddingBottom: 20
           }}
           style={styles.flatlist}
+          ListHeaderComponent={(
+            <View style={styles.header}>
+              <View style={styles.searchInput}>
+                <TextInput
+                  placeholder="Ex: Ainda Estou Aqui"
+                  placeholderTextColor={colors.gray}
+                  style={{ color: colors.white, width: '90%' }}
+                  cursorColor={colors.blue}
+                  selectionColor={colors.blue}
+                  keyboardType="web-search"
+                  returnKeyType="search"
+                  inputMode="search"
+                  value={query}
+                  onChangeText={setQuery}
+                  onSubmitEditing={() => handleSearch(query)}
+                />
+
+                <Ionicons name='search' color={colors.gray} size={iconSize} />
+              </View>
+            </View>
+          )}
         />
       </View>
     </View>
@@ -107,10 +108,6 @@ const styles = StyleSheet.create({
   header: {
     paddingTop: 20,
     gap: 4
-  },
-
-  box: {
-    paddingVertical: 20
   },
 
   searchInput: {
