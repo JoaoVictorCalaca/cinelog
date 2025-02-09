@@ -21,19 +21,22 @@ import {
 import Constants from 'expo-constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import RateStars from '@/src/components/RateStars';
-import { colors } from '.././util/colors';
+import { colors } from '../util/colors';
 import {
   defaultStyles,
   iconSize
-} from '.././util/defaultStyles';
-import { Movie } from '.././util/interfaces/MovieInterface';
-import { formatDate, getMovieById, getMovieTrailer, getSimilarMovies, getWatchProviders } from '.././util/movieDbApi';
+} from '../util/defaultStyles';
+import { Movie } from '../util/interfaces/MovieInterface';
+import { getMovieById, getMovieTrailer, getSimilarMovies, getWatchProviders } from '../util/movieDbApi';
 import RateAndShare from '../components/RateAndShare';
 import MovieProviders from '../components/MovieProviders';
 import MovieCard from '../components/MovieCard';
 import { LinearGradient } from 'expo-linear-gradient';
+import { formatCurrency, formatDate, handleProfit } from '../util/functions';
+import { StatusBar } from 'expo-status-bar';
+import Divider from '../components/Divider';
 
-const MoviePage = () => {
+const moviePage = () => {
   const params = useLocalSearchParams();
   const { id } = params
   const [movie, setMovie] = React.useState<Movie | null>()
@@ -130,7 +133,7 @@ const MoviePage = () => {
 
           <LinearGradient
             colors={[
-              colors.black, 'rgba(0, 0, 0, 0.38)',
+              'transparent',
               colors.black
             ]}
             style={{
@@ -143,42 +146,62 @@ const MoviePage = () => {
           />
         </View>
 
-        <View style={{ paddingHorizontal: 20, marginTop: -85, gap: 20 }}>
-          <Image source={{ uri: `https://image.tmdb.org/t/p/original${movie.poster_path}` }} style={{
-            width: 220,
-            height: 330,
-            borderRadius: 12,
-            alignSelf: 'center',
-          }} />
+        <View style={styles.main}>
+          <View style={[styles.box, { flexDirection: 'row' }]}>
+            <Image source={{ uri: `https://image.tmdb.org/t/p/original${movie.poster_path}` }} style={{
+              width: 110,
+              height: 165,
+              borderRadius: 12,
+            }} />
 
-          {trailerUrl && (
-            <TouchableOpacity
-              onPress={watchTrailer}
-              style={[{
-                flexDirection: 'row',
-                gap: 6
-              },
-              defaultStyles.centerContent,
-              styles.trailerLink
-              ]}
-            >
+            <View style={styles.box}>
               <Text
                 style={[
-                  defaultStyles.colorBlack,
-                  defaultStyles.paragraph
-                ]}
-              >Assistir trailer</Text>
-              <Ionicons name='logo-youtube' color={colors.black} size={iconSize} />
-            </TouchableOpacity>
-          )}
+                  defaultStyles.h1,
+                  defaultStyles.defaultTextColor,
+                  {
+                    fontWeight: 'bold',
+                    width: '65%'
+                  }
+                ]}>{movie?.title}</Text>
+
+              <View>
+                <Text style={[defaultStyles.defaultTextColor, defaultStyles.paragraph, { fontWeight: 'bold' }]}> {formatDate(movie.release_date)}</Text>
+                <Text style={[defaultStyles.defaultTextColor, defaultStyles.paragraph, { fontWeight: 'bold' }]}> {movie.runtime}min</Text>
+              </View>
+
+              {trailerUrl && (
+                <TouchableOpacity
+                  onPress={watchTrailer}
+                  style={[{
+                    flexDirection: 'row',
+                    gap: 6
+                  },
+                  styles.trailerLink
+                  ]}
+                >
+                  <Text
+                    style={[
+                      defaultStyles.defaultTextColor,
+                      defaultStyles.paragraph
+                    ]}
+                  >Assistir trailer</Text>
+                  <Ionicons name='logo-youtube' color={colors.white} size={iconSize} />
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
 
           <View style={styles.box}>
             <Text
               style={[
-                defaultStyles.h1,
+                defaultStyles.paragraph,
                 defaultStyles.defaultTextColor,
-                { fontWeight: 'bold' }
-              ]}>{movie?.title}</Text>
+                {
+                  fontWeight: 'bold',
+                  textTransform: 'uppercase'
+                }
+              ]}>{movie?.tagline}</Text>
 
             <Text
               style={[
@@ -201,28 +224,29 @@ const MoviePage = () => {
           </View>
 
           <View>
-            <Text style={[defaultStyles.defaultTextColor, defaultStyles.paragraph, { fontWeight: 'bold' }]}>Lançado em:
-              <Text style={[defaultStyles.defaultTextColor, defaultStyles.paragraph, { fontWeight: 'normal' }]}> {formatDate(movie.release_date)}</Text>
-            </Text>
-            <Text style={[defaultStyles.defaultTextColor, defaultStyles.paragraph, { fontWeight: 'bold' }]}>Tempo de duração:
-              <Text style={[defaultStyles.defaultTextColor, defaultStyles.paragraph, { fontWeight: 'normal' }]}> {movie.runtime}min</Text>
-            </Text>
-          </View>
-
-          <TouchableOpacity
-            style={styles.shareButton}
-            onPress={startSharing}>
             <Text
               style={[
-                defaultStyles.colorBlack,
                 defaultStyles.paragraph,
+                defaultStyles.defaultTextColor,
+              ]}>Orçamento: {formatCurrency(movie?.budget)}</Text>
+
+            <Text
+              style={[
+                defaultStyles.paragraph,
+                defaultStyles.defaultTextColor,
+              ]}>Bilheteria: {formatCurrency(movie?.revenue)}</Text>
+
+            <Text
+              style={[
+                defaultStyles.paragraph,
+                defaultStyles.defaultTextColor,
                 {
                   fontWeight: 'bold'
                 }
-              ]}
-            >Avaliar</Text>
-            <Ionicons name='star-half-outline' color={colors.black} size={iconSize} />
-          </TouchableOpacity>
+              ]}>{handleProfit(movie?.revenue, movie?.budget)}</Text>
+          </View>
+
+          <Divider />
 
           <MovieProviders providers={providers} />
 
@@ -236,15 +260,32 @@ const MoviePage = () => {
               horizontal
               contentContainerStyle={{
                 gap: 10,
+                marginBottom: 10
               }}
             />
           </View>
         </View>
       </ScrollView>
 
+      <TouchableOpacity
+        style={styles.shareButton}
+        onPress={startSharing}>
+        <Text
+          style={[
+            defaultStyles.paragraph,
+            defaultStyles.colorBlack,
+            {
+              fontWeight: 'bold'
+            }
+          ]}
+        >Avaliar</Text>
+        <Ionicons name='star' color={colors.black} size={iconSize} />
+      </TouchableOpacity>
+
       <Modal
         visible={shareModalVisible}
         animationType='fade'
+        statusBarTranslucent
         transparent
       >
         <RateAndShare modalVisible={setShareModalVisible} movie={movie} />
@@ -255,21 +296,22 @@ const MoviePage = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Platform.OS === 'android' ? Constants.statusBarHeight : 80,
+    gap: 20
+  },
+
+  main: {
+    paddingHorizontal: 20,
     gap: 20
   },
 
   box: {
     width: '100%',
-    gap: 10
+    gap: 10,
   },
 
   trailerLink: {
-    backgroundColor: colors.green,
-    padding: 10,
-    width: '55%',
+    alignItems: 'center',
     borderRadius: 12,
-    alignSelf: 'center'
   },
 
   backButton: {
@@ -282,18 +324,21 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: Platform.OS === 'android' ? Constants.statusBarHeight + 15 : 45,
     left: 20,
-    zIndex: 10
+    zIndex: 10,
   },
 
   shareButton: {
     backgroundColor: colors.green,
-    padding: 10,
-    borderRadius: 12,
+    padding: 20,
+    borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 6
+    gap: 6,
+    position: 'absolute',
+    bottom: 20,
+    right: 20
   }
 })
 
-export default MoviePage
+export default moviePage

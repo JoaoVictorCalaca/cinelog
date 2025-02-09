@@ -1,7 +1,5 @@
 import axios from 'axios'
-
-const api_key = ''
-const baseURL = 'https://api.themoviedb.org/3'
+import { baseURL, api_key } from './apiConfig';
 
 //Pesquisar filmes com base na query
 export const getMovies = async (movieTitle: string) => {
@@ -63,16 +61,17 @@ export const getMovieTrailer = async (movieId: string) => {
 }
 
 // retorna uma lista dos filmes mais populares da semana
-export const getPopularMovies = async () => {
+export const getPopularMovies = async (page: number) => {
   try {
     const resp = await axios.get(`${baseURL}/trending/movie/week`, {
       params: {
         api_key: api_key,
-        language: 'pt-BR'
+        language: 'pt-BR',
+        page
       }
     })
 
-    return resp.data.results || []
+    return resp.data ?? { results: [], total_pages: 1 };    
   } catch (e) {
     console.log(`Error in the fetch: ${e}`);
     return []
@@ -162,10 +161,22 @@ export const getSimilarMovies = async (movieId: string) => {
   }
 }
 
+export const getMovieImage = async () => {
+  try {
+    const resp = await axios.get(`${baseURL}/movie/1061474/images`, {
+      params: {
+        api_key: api_key,
+        language: 'pt-BR'
+      }
+    })
 
-
-//formatar a data de lançamento
-export const formatDate = (dateString: string) => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('pt-BR')
+    const images = resp.data.backdrops
+    
+    return images && images.length > 0
+      ? `https://image.tmdb.org/t/p/original${images[0].file_path}`
+      : null;
+  } catch (e) {
+    console.error(`Error in fetch ${e}`);
+    return null
+  }
 }

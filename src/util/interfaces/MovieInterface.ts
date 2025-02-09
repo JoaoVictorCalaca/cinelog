@@ -6,5 +6,8 @@ export interface Movie {
   vote_average: number,
   release_date: string,
   runtime: number,
-  backdrop_path: string
+  backdrop_path: string,
+  tagline: string,
+  revenue: number,
+  budget: number
 }
