@@ -37,7 +37,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, showText }) => {
   return (
     <Link
       href={{
-        pathname: '/MoviePage',
+        pathname: '/moviePage',
         params: { id: movie.id },
       }}
     >

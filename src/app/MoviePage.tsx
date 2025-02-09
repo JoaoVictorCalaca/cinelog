@@ -21,13 +21,13 @@ import {
 import Constants from 'expo-constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import RateStars from '@/src/components/RateStars';
-import { colors } from '.././util/colors';
+import { colors } from '../util/colors';
 import {
   defaultStyles,
   iconSize
-} from '.././util/defaultStyles';
-import { Movie } from '.././util/interfaces/MovieInterface';
-import { getMovieById, getMovieTrailer, getSimilarMovies, getWatchProviders } from '.././util/movieDbApi';
+} from '../util/defaultStyles';
+import { Movie } from '../util/interfaces/MovieInterface';
+import { getMovieById, getMovieTrailer, getSimilarMovies, getWatchProviders } from '../util/movieDbApi';
 import RateAndShare from '../components/RateAndShare';
 import MovieProviders from '../components/MovieProviders';
 import MovieCard from '../components/MovieCard';
@@ -36,7 +36,7 @@ import { formatCurrency, formatDate, handleProfit } from '../util/functions';
 import { StatusBar } from 'expo-status-bar';
 import Divider from '../components/Divider';
 
-const MoviePage = () => {
+const moviePage = () => {
   const params = useLocalSearchParams();
   const { id } = params
   const [movie, setMovie] = React.useState<Movie | null>()
@@ -341,4 +341,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default MoviePage
+export default moviePage

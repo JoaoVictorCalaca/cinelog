@@ -1,7 +1,5 @@
 import axios from 'axios'
-
-const api_key = ''
-const baseURL = 'https://api.themoviedb.org/3'
+import { baseURL, api_key } from './apiConfig';
 
 //Pesquisar filmes com base na query
 export const getMovies = async (movieTitle: string) => {
@@ -160,5 +158,25 @@ export const getSimilarMovies = async (movieId: string) => {
   } catch (e) {
     console.error(`Error in the fetch ${e}`);
     return []
+  }
+}
+
+export const getMovieImage = async () => {
+  try {
+    const resp = await axios.get(`${baseURL}/movie/1061474/images`, {
+      params: {
+        api_key: api_key,
+        language: 'pt-BR'
+      }
+    })
+
+    const images = resp.data.backdrops
+    
+    return images && images.length > 0
+      ? `https://image.tmdb.org/t/p/original${images[0].file_path}`
+      : null;
+  } catch (e) {
+    console.error(`Error in fetch ${e}`);
+    return null
   }
 }

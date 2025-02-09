@@ -55,6 +55,7 @@ export default function Layout() {
           drawerActiveTintColor: colors.black,
           drawerActiveBackgroundColor: colors.green,
         }}>
+
         <Drawer.Screen
           name="index"
           options={{
@@ -79,6 +80,7 @@ export default function Layout() {
             drawerIcon: ({ color, focused }) => <Ionicons size={24} name={focused ? 'person-circle' : 'person-circle-outline'} color={color} />
           }}
         />
+
       </Drawer>
     </GestureHandlerRootView>
   );
